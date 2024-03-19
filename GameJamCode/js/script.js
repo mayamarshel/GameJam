@@ -7,7 +7,7 @@ let config = {
   physics: {
     default: 'arcade',
   },
-  scene: []
+  scene: [Play]
 };
 
 // Here we actually create the game using this configuration!
