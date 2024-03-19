@@ -3,27 +3,49 @@ class Play extends Phaser.Scene {
       super({
         key: `play`
       });
+      
     }
   
     create() {
-  
-      this.raindrop = this.physics.add.sprite(100, 100, `raindrop`);
+
+      this.raindrops = this.physics.add.group({
+        // All walls should use the wall image key
+        key: `raindrop`,
+        quantity: 1,
+      });
   
 
       this.umbrella = this.physics.add.sprite(200, 200, `umbrella`);
-  
-     // this.createAnimations();
-
-      this.raindrop.setVelocityY(200);
-      //this.umbrella.play(`moving`);
 
       this.cursors = this.input.keyboard.createCursorKeys();
+      this.physics.add.collider(this.umbrella, this.raindrops);
+
+      this.raindrops.children.each(function(raindrop) {
+        let x = Phaser.Math.Between(0, this.sys.canvas.width);
+        let y = Phaser.Math.Between(0, -600);
+        raindrop.setPosition(x, y);
+        raindrop.setVelocityY(200)
+        raindrop.setVelocityX(0)
+
+
+      }, this);
+
+      raindrops.refresh();
+
+      this.umbrella.body.onOverlap = true;
+      this.physics.add.overlap(this.umbrella, this.raindrops);
+
+      this.physics.world.on('overlap', (gameObject1, gameObject2, body1, body2) =>
+      {
+          gameObject1.destroy();
+          console.log('collision')
+      });
     }
-  
+
     update() {
-        this.handleInput();
-    }
-  
+    this.handleInput();
+  }
+ 
 
     handleInput() {
         if (this.cursors.left.isDown) {
@@ -49,4 +71,6 @@ class Play extends Phaser.Scene {
           }
 
 }
+
+
 }

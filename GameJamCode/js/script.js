@@ -7,8 +7,9 @@ let config = {
   physics: {
     default: 'arcade',
   },
-  scene: [Play]
+  // NOTE: Added Boot scene to the list of scenes in the first position
+  // so it will load first
+  scene: [Boot, Play]
 };
 
-// Here we actually create the game using this configuration!
 let game = new Phaser.Game(config);
