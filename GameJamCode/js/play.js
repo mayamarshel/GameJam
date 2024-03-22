@@ -1,17 +1,20 @@
-//help with:
-//    - fade from black to yellow and sun drops from the sky
-//    - check if person is still on screen ??
-//    - why isn't person being destroyed?
+//Credits- 
+//   Pippin bar for handleInput and basic structure as well as fixing bugs
+//   Sabine Bergler for help with fading out code 
+//   Mathilde for help feeling out Phaser and figuring out Sprite issue
 
 class Play extends Phaser.Scene {
     constructor() {
       super({
         key: `play`
       });
+        //background gradient states and index for interpolater
       this.startBack = new Phaser.Display.Color(0, 0, 0);
-      this.endBack = new Phaser.Display.Color(250, 223, 172);
+      this.endBack = new Phaser.Display.Color(252, 232, 194);
       this.index = 0
+
       this.gameEnded = false;
+
       this.timerLength = 1000 * 8
       this.youLost = false;
     }
@@ -21,10 +24,11 @@ class Play extends Phaser.Scene {
         //needed to add null when endgame is called so that it can only be called once
       this.timer = this.time.delayedCall(this.timerLength, this.endGame, null, this);
 
-      //this.cameras.main.setBackgroundColor(0xbababa)
-
+        //text for different outcomes
       this.startText = this.add.text(300, 500, 'keep him dry!');
       this.endText = this.add.text(300, -600, 'congrats, he stayed dry');
+      this.loseText = this.add.text(-300, 500, 'he got wet!');
+
 
       this.raindrops = this.physics.add.group({
           //creates a group of 200 raindrops 
@@ -51,7 +55,7 @@ class Play extends Phaser.Scene {
         //animates things
       this.personAnimation();
       this.sunAnimation();
-      
+  
     }
 
     endGame(){
@@ -71,8 +75,14 @@ class Play extends Phaser.Scene {
          this.index++;
          console.log(this.index)  
          this.sun.y = this.sun.y + 6
+
          this.endText.y = this.endText.y + 10
          this.startText.y = this.startText.y + 10
+         }
+         else if (this.youLost === true && this.loseText.x < 400) {
+            //displays lose text
+          this.startText.y = this.startText.y + 10
+          this.loseText.x = this.loseText.x + 10
          }
 
     }
@@ -130,6 +140,7 @@ sunAnimation() {
 }
 
 handleInput() {
+    //checks if the cursor is up or down or left or right to then set the according velocity
   if (this.cursors.left.isDown) {
       this.umbrella.setVelocityX(-100);
     }

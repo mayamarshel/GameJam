@@ -22,7 +22,7 @@ class Boot extends Phaser.Scene {
     this.load.spritesheet(`sun`, `assets/images/sunSpriteSheet.png`, {
       frameWidth: 256,
       frameHeight: 256,
-      endFrame: 9
+      endFrame: 5
     });
 
     this.load.on(`complete`, () => {
