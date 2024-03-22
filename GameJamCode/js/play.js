@@ -8,6 +8,9 @@ class Play extends Phaser.Scene {
   
     create() {
 
+      this.timer = this.time.delayedCall(3000, this.endGame, null, this);
+
+
       this.raindrops = this.physics.add.group({
         // All walls should use the wall image key
         key: `raindrop`,
@@ -16,6 +19,8 @@ class Play extends Phaser.Scene {
 
       this.person = this.physics.add.sprite(Phaser.Math.Between(0, this.sys.canvas.width), Phaser.Math.Between(0, 50), `person`);
       this.umbrella = this.physics.add.sprite(200, 200, `umbrella`);
+      this.sun = this.add.sprite(150, 200, `sun`);
+
 
       this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -23,38 +28,30 @@ class Play extends Phaser.Scene {
       this.colliders();
       this.rainPosition();
     
-      this.physics.add.overlap(this.umbrella, this.person, this.destroyRain, null, this)
+      this.physics.add.overlap(this.umbrella, this.raindrops, null, this.destroyRain, this)
 
-      let idleAnimationConfig = {
-        // NOTE: We need to use a different animation key of course
-        key: `idle`,
-        frames: this.anims.generateFrameNumbers(`person`, {
-          // NOTE: We're only going to use frame 0, so it's starts and ends there
-          start: 0,
-          end: 6
-        }),
-        // NOTE: No need to specify a frame rate for something that doesn't technically animate!
-        // NOTE: We'll repeat 0 times!
-        repeat: -1
-      };
-      this.anims.create(idleAnimationConfig);
-      // NOTE: It makes sense for the avatar to start out "idle"
-      this.person.play(`idle`);
+      this.personAnimation();
+      this.sunAnimation();
+    }
+
+    
+
+    endGame(){
+      console.log('game has ended')
+      this.sundrop()
+      console.log(this.sunPosition)
+    }
+
+    update(){
+      this.handleInput()
+    }
+
+    destroyRain(umbrella, raindrop){
+      raindrop.destroy()
     }
 
 
 
-    destroyRain(){
-        this.raindrop.destroy();
-    }
-
-    update() {
-    this.handleInput();
-  }
- 
-  collectItem(umbrella, item) {
-    item.destroy();
-  }
 
 
     handleInput() {
@@ -93,8 +90,40 @@ rainPosition() {
 }
 
 colliders(){
-    this.physics.add.collider(this.umbrella, this.raindrops);
     this.physics.add.collider(this.person, this.raindrops);
     this.physics.add.collider(this.person, this.umbrella);
 }
+
+personAnimation() {
+  let idleAnimationConfig = {
+    key: `idle`,
+    frames: this.anims.generateFrameNumbers(`person`, {
+      start: 0,
+      end: 5
+    }),
+    repeat: -1
+  };
+  this.anims.create(idleAnimationConfig);
+  this.person.play(`idle`);
 }
+
+sunAnimation() {
+  let idleAnimationConfig2 = {
+    key: `radiate`,
+    frames: this.anims.generateFrameNumbers(`sun`, {
+      start: 0,
+      end: 5
+    }),
+    repeat: -1
+  };
+  this.anims.create(idleAnimationConfig2);
+  this.sun.play(`radiate`);
+}
+
+sundrop() {
+  for (let i = 0; i < 5; i++) {
+    this.sunPosition = this.sunPosition + 1
+  }
+}
+}
+
