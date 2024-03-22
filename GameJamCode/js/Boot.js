@@ -8,40 +8,29 @@ class Boot extends Phaser.Scene {
 
 
   preload() {
- 
+      //loads the images from the file 
     this.load.image(`raindrop`, `assets/images/raindrop.png`,);
     this.load.image(`umbrella`, `assets/images/umbrella-1.png.png`);
     
     this.load.spritesheet(`person`, `assets/images/idleAnimation.png`, {
-      // Our animation uses 32x32 pixel frames
       frameWidth: 32,
       frameHeight: 32,
-      // Our animation has 4 frames, so the final frame number is 3, counting from 0
+      // assigns number of frams (starting from 0)
       endFrame: 5
     });
 
-    this.load.spritesheet(`sun`, `assets/images/sunSheet.png`, {
-      // Our animation uses 32x32 pixel frames
-      frameWidth: 64,
-      frameHeight: 64,
-      // Our animation has 4 frames, so the final frame number is 3, counting from 0
-      endFrame: 5
+    this.load.spritesheet(`sun`, `assets/images/sunSpriteSheet.png`, {
+      frameWidth: 256,
+      frameHeight: 256,
+      endFrame: 9
     });
 
     this.load.on(`complete`, () => {
-      // Switch to the Play scene
+      // switches to play scene when it it loaded 
       console.log('game is playing')
 
       this.scene.start(`play`);
     });
-
-  }
-
-  create() {
-
-  }
-
-  update() {
 
   }
 }
